@@ -14,5 +14,5 @@ model Done {
   uid        String  @id @default(cuid())
   created_at DateTime
   text       String
-  date       DateTime
+  date       String
 }
