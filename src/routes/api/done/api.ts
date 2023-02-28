@@ -1,8 +1,12 @@
-import { array, date, object, string, type InferType } from 'yup';
+import { array, date, number, object, string, type InferType } from 'yup';
 
 
 export const newDoneItemRequest = object({
 	text: string().required()
+})
+
+export const deleteItemRequest = object({
+    uid: string().required()
 })
 
 export type NewDoneItemRequest = InferType<typeof newDoneItemRequest>;
@@ -11,9 +15,10 @@ export type NewDoneItemRequest = InferType<typeof newDoneItemRequest>;
 export const doneItem = object({
     uid: string().required(),
     created_at: date().required(),
-    text: string().required()
+    text: string().required(),
+    date: date().required()
 });
 
-export const doneItems = array().of(doneItem);
+export const doneItems = array().of(doneItem).required();
 
 export type DoneItems = InferType<typeof doneItems>;

@@ -1,19 +1,8 @@
 <script lang="ts">
-    import {add_item_today, get_list} from "$lib/list"
-	import { listen } from "svelte/internal";
-
-    let new_item = "";
-
-    let items = ["vstat", "lahnut si", "nieco"];
-
-    async function addNewItem() {
-        await add_item_today(new_item);
-
-        items.push(new_item);
-        items = items;
-        new_item = ""
-        // items = [...items, "cau"];
-    }
+	import type { DoneItems } from "$api/done/api";
+    export let data: {
+        done_items: DoneItems
+    };
 </script>
 
 <h1>Done list</h1>
@@ -36,24 +25,22 @@
 
 <title>Done list</title>
 <div>
-    <form on:submit={addNewItem}>
-        <input bind:value={new_item}/>
+    <form method="POST" action="?/create">
+        <input name="text" />
         <input type="submit" value="I've done this"/>
     </form>
 
     <ul class="list">
-        {#await get_list()}
-            Loading list...
-        {:then list}
-            {#if list}
-                {#each list as item}
-                <li class="list-item">
-                    <div class="list">
-                        {item.text}
-                    </div>
-                </li>
-                {/each}
-            {/if}
-        {/await}
+        {#each data.done_items as item}
+        <li class="list-item">
+            <div class="list">
+                <form method="POST" action="?/delete">
+                    {item.text}
+                    <input type="hidden" name="uid" value={item.uid} />
+                    <button aria-label="Mark as complete">x</button>
+                </form>
+            </div>
+        </li>
+        {/each}
     </ul>
 </div>
