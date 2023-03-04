@@ -43,8 +43,8 @@ export async function load({ params }: ServerLoadEvent)  {
 
 export const actions: Actions = {
 	create: async ({ request, params }) => {
-        logger.info("params.date", params.date);
         let date = getDateFromParam(params.date);
+        logger.info("date", date);
         await validateParam(date);
 
 		const data = Object.fromEntries(await request.formData());
