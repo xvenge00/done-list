@@ -1,12 +1,9 @@
 <script lang="ts">
-	import type { DoneItems } from "$api/done/api";
-    export let data: {
-        done_items: DoneItems,
-        date: string
-    };
+    export let data: PageData;
     import { goto } from "$app/navigation";
     import moment from "moment";
     import {toISOString} from "$lib/date"
+	import type { PageData } from "./$types";
 
     let dateChanged = () => {
         console.log(`date changed: ${data.date}`);
