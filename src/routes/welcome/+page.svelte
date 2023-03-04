@@ -1,0 +1,1 @@
+Welcome, please <a href="/auth/signin">SIGN IN</a>

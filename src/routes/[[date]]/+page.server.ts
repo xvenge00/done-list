@@ -1,9 +1,10 @@
-import { type ServerLoadEvent, type Actions, error } from "@sveltejs/kit";
+import { type Actions, error, redirect } from "@sveltejs/kit";
 import { deleteItemRequest, doneItems, newDoneItemRequest, type DoneItems } from "$lib/../routes/api/done/api"
 import * as logger from "$lib/logger"
 import { prisma } from "$lib/prisma";
 import { toISOString } from "$lib/date";
 import { date } from 'yup';
+import type { PageServerLoad } from "./$types";
 
 
 function getDateFromParam(dateParam: string | undefined): string {
@@ -23,7 +24,13 @@ async function validateParam(dateParam: string) {
     }
 }
 
-export async function load({ params }: ServerLoadEvent)  {
+export const load: PageServerLoad = async({ params, locals }) =>  {
+    let session = await locals.getSession();
+    if (!session || !session.user || !session.user.email) {
+        // throw error(401, {message: "Unauthorized"});
+        throw redirect(302, "/welcome");
+    }
+
     // logger.info("params.date", params.date);
     let date = getDateFromParam(params.date);
     await validateParam(date);
