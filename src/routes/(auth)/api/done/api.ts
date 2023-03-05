@@ -2,7 +2,7 @@ import { array, date, number, object, string, type InferType } from 'yup';
 
 
 export const newDoneItemRequest = object({
-	text: string().required()
+	text: string().min(1).required()
 })
 
 export const deleteItemRequest = object({

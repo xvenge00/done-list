@@ -21,9 +21,6 @@
             >
           </span>
           <a href="/auth/signout" class="button" data-sveltekit-preload-data="off">Sign out</a>
-        {:else}
-          <span class="notSignedInText">You are not signed in</span>
-          <a href="/auth/signin" class="buttonPrimary" data-sveltekit-preload-data="off">Sign in</a>
         {/if}
       </p>
     </div>
@@ -32,36 +29,6 @@
 </div>
 
 <style>
-  :global(body) {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-      "Noto Color Emoji";
-    padding: 0 1rem 1rem 1rem;
-    max-width: 680px;
-    margin: 0 auto;
-    background: #fff;
-    color: #333;
-  }
-  :global(li),
-  :global(p) {
-    line-height: 1.5rem;
-  }
-  :global(a) {
-    font-weight: 500;
-  }
-  :global(hr) {
-    border: 1px solid #ddd;
-  }
-  :global(iframe) {
-    background: #ccc;
-    border: 1px solid #ccc;
-    height: 10rem;
-    width: 100%;
-    border-radius: 0.5rem;
-    filter: invert(1);
-  }
-
   .nojs-show {
     opacity: 1;
     top: 0;
@@ -132,14 +99,5 @@
   }
   .buttonPrimary:hover {
     box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.2);
-  }
-  .navItems {
-    margin-bottom: 2rem;
-    padding: 0;
-    list-style: none;
-  }
-  .navItem {
-    display: inline-block;
-    margin-right: 1rem;
   }
 </style>
