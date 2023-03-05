@@ -5,7 +5,6 @@ import Google from "@auth/core/providers/google"
 import { GITHUB_ID, GITHUB_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, AUTH_SECRET } from "$env/static/private"
 import { redirect, type Handle } from "@sveltejs/kit";
 import { isAuthenticated } from "$lib/server/auth";
-import * as logger from "$lib/logger"
 
 export const authentiaction_handle = SvelteKitAuth({
   providers: [
@@ -16,15 +15,10 @@ export const authentiaction_handle = SvelteKitAuth({
 })
 
 export const autorization_handle: Handle = async ({ event, resolve }) => {
-
   const pathname = event.url.pathname;
-  logger.info("pathname", pathname);
-  
   if (isAuthenticated(await event.locals.getSession()) || pathname.startsWith("/welcome") || pathname.startsWith("/auth/login")) {
     return await resolve(event);
   }
-
-  logger.info("redirecting");
   throw redirect(302, "/welcome")
 }
 

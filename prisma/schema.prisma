@@ -6,14 +6,17 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
   id         Int      @id @default(autoincrement())
   email      String   @unique
   done       Done[]
+
+  @@index([email])
 }
 
 model Done {
@@ -23,4 +26,6 @@ model Done {
   created_at DateTime
   text       String
   date       String
+
+  @@index([userId])
 }
