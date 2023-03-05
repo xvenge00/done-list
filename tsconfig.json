@@ -9,10 +9,10 @@
 				"./src/lib/*"
 			],
 			"$api": [
-				"./src/routes/api/"
+				"./src/routes/(auth)/api"
 			],
 			"$api/*": [
-				"./src/routes/api/*"
+				"./src/routes/(auth)/api/*"
 			],
 			"$types": [
 				"./types/src/*"

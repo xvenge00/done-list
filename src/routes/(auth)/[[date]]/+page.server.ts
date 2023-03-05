@@ -1,5 +1,5 @@
 import { type Actions, error, redirect } from "@sveltejs/kit";
-import { deleteItemRequest, newDoneItemRequest } from "$lib/../routes/api/done/api"
+import { deleteItemRequest, newDoneItemRequest } from "../api/done/api"
 import * as logger from "$lib/logger"
 import { toISOString } from "$lib/date";
 import { date } from 'yup';
