@@ -4,8 +4,8 @@ import * as logger from "$lib/logger"
 import { toISOString } from "$lib/date";
 import { date } from 'yup';
 import type { PageServerLoad } from "./$types";
-import { createPostAt, deletePost, getDoneItemsForDate } from "$lib/db";
-import { emailFromSession } from "$lib/auth";
+import { createPostAt, deletePost, getDoneItemsForDate } from "$lib/server/db";
+import { emailFromSession } from "$lib/server/auth";
 
 
 function getDateFromParam(dateParam: string | undefined): string {
