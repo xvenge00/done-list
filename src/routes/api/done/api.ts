@@ -6,7 +6,7 @@ export const newDoneItemRequest = object({
 })
 
 export const deleteItemRequest = object({
-    uid: string().required()
+    uid: number().required()
 })
 
 export type NewDoneItemRequest = InferType<typeof newDoneItemRequest>;

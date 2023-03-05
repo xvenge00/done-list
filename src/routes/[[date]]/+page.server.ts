@@ -1,10 +1,11 @@
 import { type Actions, error, redirect } from "@sveltejs/kit";
-import { deleteItemRequest, doneItems, newDoneItemRequest, type DoneItems } from "$lib/../routes/api/done/api"
+import { deleteItemRequest, newDoneItemRequest } from "$lib/../routes/api/done/api"
 import * as logger from "$lib/logger"
-import { prisma } from "$lib/prisma";
 import { toISOString } from "$lib/date";
 import { date } from 'yup';
 import type { PageServerLoad } from "./$types";
+import { createPostAt, deletePost, getDoneItemsForDate } from "$lib/db";
+import { emailFromSession } from "$lib/auth";
 
 
 function getDateFromParam(dateParam: string | undefined): string {
@@ -36,11 +37,13 @@ export const load: PageServerLoad = async({ params, locals }) =>  {
     await validateParam(date);
     
     logger.info("date", date);
-    let done_items = await prisma.done.findMany({
-        where: {
-            date: date
-        }
-    });
+
+    let email = emailFromSession(await locals.getSession());
+    if (!email) {
+        throw error(500, {message: "Email not present"});
+    }
+
+    let done_items = await getDoneItemsForDate(email, date);
 
     return {
         done_items: done_items,
@@ -49,7 +52,7 @@ export const load: PageServerLoad = async({ params, locals }) =>  {
 }
 
 export const actions: Actions = {
-	create: async ({ request, params }) => {
+	create: async ({ request, params, locals }) => {
         let date = getDateFromParam(params.date);
         logger.info("date", date);
         await validateParam(date);
@@ -58,28 +61,23 @@ export const actions: Actions = {
         logger.info("creating done item: ", JSON.stringify(data));
         let new_done_item = await newDoneItemRequest.validate(data)
 		
-        await prisma.done.create({
-			data: {
-				created_at: new Date(),
-                date: date,
-				text: new_done_item.text
-			}
-		});
+        let email = emailFromSession(await locals.getSession());
+        if (!email) {
+            throw error(500, {message: "Email not present"});
+        }
+        await createPostAt(email, new_done_item.text, date);
         logger.info("created new item");
 	},
-    delete: async ({ request }) => {
+    delete: async ({ request, locals }) => {
         const data = Object.fromEntries(await request.formData());
         logger.info("deleting done item: ", JSON.stringify(data));
         let itemToDelete = await deleteItemRequest.validate(data);
 
-        await prisma.done.delete({
-			where: {
-                uid: itemToDelete.uid
-            }
-		});
+        let email = emailFromSession(await locals.getSession());
+        if (!email) {
+            throw error(500, {message: "Email not present"});
+        }
+
+        await deletePost(email, itemToDelete.uid);
     }
 };
-
-// export function match(value) {
-// 	return /^[0-9a-f]{6}$/.test(value);
-// }
