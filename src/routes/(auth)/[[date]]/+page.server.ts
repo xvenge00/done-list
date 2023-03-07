@@ -1,4 +1,4 @@
-import { type Actions, error, redirect } from "@sveltejs/kit";
+import { type Actions, error, redirect, fail } from "@sveltejs/kit";
 import { deleteItemRequest, newDoneItemRequest } from "../api/done/api"
 import * as logger from "$lib/logger"
 import { toISOString } from "$lib/date";
@@ -53,6 +53,11 @@ export const load: PageServerLoad = async({ params, locals }) =>  {
 
 export const actions: Actions = {
 	create: async ({ request, params, locals }) => {
+        let session = await locals.getSession();
+        if (!session || !session.user || !session.user.email) {
+            throw fail(401, {user: "Unauthorized"});
+        }
+
         let date = getDateFromParam(params.date);
         logger.info("date", date);
         await validateParam(date);
@@ -69,6 +74,11 @@ export const actions: Actions = {
         logger.info("created new item");
 	},
     delete: async ({ request, locals }) => {
+        let session = await locals.getSession();
+        if (!session || !session.user || !session.user.email) {
+            throw fail(401, {user: "Unauthorized"});
+        }
+
         const data = Object.fromEntries(await request.formData());
         logger.info("deleting done item: ", JSON.stringify(data));
         let itemToDelete = await deleteItemRequest.validate(data);
