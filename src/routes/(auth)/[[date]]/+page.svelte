@@ -4,6 +4,9 @@
     import moment from "moment";
     import {toISOString} from "$lib/date"
 	import type { PageData } from "./$types";
+    import { enhance } from '$app/forms';
+
+    let error = "";
 
     let dateChanged = () => {
         console.log(`date changed: ${data.date}`);
@@ -92,6 +95,12 @@
     span.text {
         margin: auto auto auto 0;
     }
+
+    div.error {
+        margin: auto;
+        text-align: center;
+        color: red;
+    }
 </style>
 
 
@@ -104,12 +113,27 @@
         <button on:click={dayAfter}>&gt</button>
     </div>
 
-    <form method="POST" class="in" action="?/create">
+    <form method="POST" class="in" action="?/create" use:enhance={({data, cancel}) => {
+        console.log("ahoj")
+        if (!data.get("text")) {
+            console.log("empty")
+            error = "Doing nothing is not wrong, but try submitting something"
+            cancel()
+            return
+        }
+
+        error = ""
+    }}>
         <!-- <input name="text" placeholder="Got out of bed?" class="input input-lg input-bordered" autocomplete="off" id="main-input" /> -->
         <input name="text" placeholder="Got out of bed?" class="text-input" autocomplete="off" />
         <!-- <input class="btn btn-lg btn-active btn-primary" type="submit" value="I've done this"/> -->
         <input class="done-button" type="submit" value="Done!"/>
     </form>
+    {#if error}
+    <div class="error">
+        <span class="error">{error}</span>
+    </div>
+    {/if}
 
     <div class="lists">
         <ul class="list">
