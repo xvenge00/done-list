@@ -2,24 +2,12 @@
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
 		"paths": {
-			"$lib": [
-				"./src/lib"
-			],
-			"$lib/*": [
-				"./src/lib/*"
-			],
-			"$api": [
-				"./src/routes/(auth)/api"
-			],
-			"$api/*": [
-				"./src/routes/(auth)/api/*"
-			],
-			"$types": [
-				"./types/src/*"
-			],
-			"$types/*": [
-				"./types/*"
-			]
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$api": ["./src/routes/(auth)/api"],
+			"$api/*": ["./src/routes/(auth)/api/*"],
+			"$types": ["./types/src/*"],
+			"$types/*": ["./types/*"]
 		},
 		"allowJs": true,
 		"checkJs": true,

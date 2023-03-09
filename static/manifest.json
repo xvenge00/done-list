@@ -1,26 +1,26 @@
 {
-    "id": "done-list",
-    "short_name": "Done List",
-    "name": "Done List",
-    "start_url": "/",
-    "scope": "/",
-    "background_color": "#f2be1d",
-    "theme_color": "#f2be1d",
-    "display": "standalone",
-    "orientation": "any",
-    "dir": "ltr",
-    "lang": "en",
-    "description": "Write down your achievements, to maximalize your dose of dopamine.",
-    "icons": [
-      {
-        "src": "/icons/logo_512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      },
-      {
-        "src": "/icons/logo_192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      }
-    ]
+	"id": "done-list",
+	"short_name": "Done List",
+	"name": "Done List",
+	"start_url": "/",
+	"scope": "/",
+	"background_color": "#f2be1d",
+	"theme_color": "#f2be1d",
+	"display": "standalone",
+	"orientation": "any",
+	"dir": "ltr",
+	"lang": "en",
+	"description": "Write down your achievements, to maximalize your dose of dopamine.",
+	"icons": [
+		{
+			"src": "/icons/logo_512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/icons/logo_192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		}
+	]
 }
