@@ -15,7 +15,10 @@ import { PUBLIC_SENTRY_DSN } from '$env/static/public';
 
 export const handle = SvelteKitAuth({
 	providers: [
+		// T
+		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
 		GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
 		Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })
 	],
 	secret: AUTH_SECRET
