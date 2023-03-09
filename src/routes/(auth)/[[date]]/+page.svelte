@@ -64,9 +64,11 @@
 		</div>
 	{/if}
 
+	{#await data.async.done_items}
+	{:then done_items} 
 	<div class="lists">
 		<ul class="list">
-			{#each data.done_items as item}
+			{#each done_items as item}
 				<li class="list-item">
 					<div>
 						<form class="line" method="POST" action="?/delete">
@@ -95,6 +97,8 @@
 			{/each}
 		</ul>
 	</div>
+	{/await}
+	
 </div>
 
 <style>

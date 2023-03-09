@@ -42,11 +42,11 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(500, { message: 'Email not present' });
 	}
 
-	let done_items = await getDoneItemsForDate(email, date);
-
 	return {
-		done_items: done_items,
-		date: date
+		async: {
+			done_items: getDoneItemsForDate(email, date)
+		},
+		date
 	};
 };
 
