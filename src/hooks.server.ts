@@ -2,10 +2,10 @@ import { SvelteKitAuth } from '@auth/sveltekit';
 import GitHub from '@auth/core/providers/github';
 import Google from '@auth/core/providers/google';
 import {
-	GITHUB_ID,
-	GITHUB_SECRET,
-	GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET,
+	AUTH_GITHUB_ID,
+	AUTH_GITHUB_SECRET,
+	AUTH_GOOGLE_CLIENT_ID,
+	AUTH_GOOGLE_CLIENT_SECRET,
 	AUTH_SECRET
 } from '$env/static/private';
 import type { HandleServerError } from '@sveltejs/kit';
@@ -17,9 +17,9 @@ export const handle = SvelteKitAuth({
 	providers: [
 		// T
 		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
-		GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+		GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
 		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
-		Google({ clientId: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET })
+		Google({ clientId: AUTH_GOOGLE_CLIENT_ID, clientSecret: AUTH_GOOGLE_CLIENT_SECRET })
 	],
 	secret: AUTH_SECRET
 });
