@@ -42,9 +42,10 @@
 
 <div class="center">
 	<div class="date">
-		<button on:click={dayBefore}>&lt</button>
+		<button class="text-4xl" on:click={dayBefore}>&lt</button>
 		<input class="date-picker" type="date" bind:value={data.date} on:change={dateChanged} />
-		{#if !isTomorowInFuture(data.date)}<button on:click={dayAfter}>&gt</button>{/if}
+		{#if !isTomorowInFuture(data.date)}<button class="text-4xl" on:click={dayAfter}>&gt</button
+			>{/if}
 	</div>
 
 	<form
