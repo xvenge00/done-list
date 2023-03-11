@@ -163,7 +163,7 @@
 		width: 30%;
 	}
 
-	.date-picker {
+	.date {
 		margin: auto;
 	}
 
