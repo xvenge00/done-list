@@ -64,41 +64,39 @@
 		</div>
 	{/if}
 
-	{#await data.async.done_items}
-	{:then done_items} 
-	<div class="lists">
-		<ul class="list">
-			{#each done_items as item}
-				<li class="list-item">
-					<div>
-						<form class="line" method="POST" action="?/delete">
-							<span class="text">{item.text}</span>
-							<input type="hidden" name="uid" value={item.id} />
-							<!-- <button aria-label="Mark as complete">x</button> -->
-							<button class="btn btn-circle btn-outline">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									class="h-4 w-4"
-									color="red"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-									><path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M6 18L18 6M6 6l12 12"
-									/></svg
-								>
-							</button>
-						</form>
-					</div>
-				</li>
-			{/each}
-		</ul>
-	</div>
+	{#await data.async.done_items then done_items}
+		<div class="lists">
+			<ul class="list">
+				{#each done_items as item}
+					<li class="list-item">
+						<div>
+							<form class="line" method="POST" action="?/delete">
+								<span class="text">{item.text}</span>
+								<input type="hidden" name="uid" value={item.id} />
+								<!-- <button aria-label="Mark as complete">x</button> -->
+								<button class="btn btn-circle btn-outline">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-4 w-4"
+										color="red"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										><path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M6 18L18 6M6 6l12 12"
+										/></svg
+									>
+								</button>
+							</form>
+						</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/await}
-	
 </div>
 
 <style>
