@@ -2,7 +2,7 @@ import { type Actions, error, redirect, fail } from '@sveltejs/kit';
 import { deleteItemRequest, newDoneItemRequest } from '../api/done/api';
 import * as logger from '$lib/logger';
 import { toISOString } from '$lib/date';
-import { date } from 'yup';
+import { z } from 'zod';
 import type { PageServerLoad } from './$types';
 import { createPostAt, deletePost, getDoneItemsForDate } from '$lib/server/db';
 import { emailFromSession } from '$lib/server/auth';
@@ -16,30 +16,27 @@ function getDateFromParam(dateParam: string | undefined): string {
 	return date;
 }
 
-async function validateParam(dateParam: string) {
-	try {
-		await date().required().validate(dateParam);
-	} catch (e: any) {
-		throw error(404, 'invalid date');
-	}
+function validateDate(dateParam: string) {
+	const { success } = z.coerce.date().safeParse(dateParam);
+	return success;
 }
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	let session = await locals.getSession();
 	if (!session || !session.user || !session.user.email) {
-		// throw error(401, {message: "Unauthorized"});
 		throw redirect(302, '/welcome');
 	}
 
-	// logger.info("params.date", params.date);
 	let date = getDateFromParam(params.date);
-	await validateParam(date);
-
 	logger.info('date', date);
+	if (!validateDate(date)) {
+		throw error(404, { message: 'Date not found' });
+	}
 
 	let email = emailFromSession(await locals.getSession());
 	if (!email) {
-		throw error(500, { message: 'Email not present' });
+		logger.error('Email not present');
+		throw error(500, { message: 'Internal error' });
 	}
 
 	return {
@@ -59,17 +56,20 @@ export const actions: Actions = {
 
 		let date = getDateFromParam(params.date);
 		logger.info('date', date);
-		await validateParam(date);
+		validateDate(date);
 
-		const data = Object.fromEntries(await request.formData());
-		logger.info('creating done item: ', JSON.stringify(data));
-		let new_done_item = await newDoneItemRequest.validate(data);
+		const form_data = Object.fromEntries(await request.formData());
+		logger.info('creating done item: ', JSON.stringify(form_data));
+		let newDoneItemResult = await newDoneItemRequest.safeParseAsync(form_data);
+		if (!newDoneItemResult.success) {
+			throw error(400, { message: 'Invalid request' });
+		}
 
 		let email = emailFromSession(await locals.getSession());
 		if (!email) {
 			throw error(500, { message: 'Email not present' });
 		}
-		await createPostAt(email, new_done_item.text, date);
+		await createPostAt(email, newDoneItemResult.data.text, date);
 		logger.info('created new item');
 	},
 	delete: async ({ request, locals }) => {
@@ -80,13 +80,16 @@ export const actions: Actions = {
 
 		const data = Object.fromEntries(await request.formData());
 		logger.info('deleting done item: ', JSON.stringify(data));
-		let itemToDelete = await deleteItemRequest.validate(data);
+		let itemToDeleteParsed = await deleteItemRequest.safeParseAsync(data);
+		if (!itemToDeleteParsed.success) {
+			throw error(400, { message: 'Invalid request' });
+		}
 
 		let email = emailFromSession(await locals.getSession());
 		if (!email) {
 			throw error(500, { message: 'Email not present' });
 		}
 
-		await deletePost(email, itemToDelete.uid);
+		await deletePost(email, itemToDeleteParsed.data.uid);
 	}
 };

@@ -1,23 +1,37 @@
-import { array, date, number, object, string, type InferType } from 'yup';
+import { z } from 'zod';
 
-export const newDoneItemRequest = object({
-	text: string().min(1).required()
+export const newDoneItemRequest = z.object({
+	text: z
+		.string({ required_error: 'text is required' })
+		.min(1, { message: 'text must be at least 1 character' })
 });
 
-export const deleteItemRequest = object({
-	uid: number().required()
+export const deleteItemRequest = z.object({
+	uid: z.number({ required_error: 'uid is required' })
 });
 
-export type NewDoneItemRequest = InferType<typeof newDoneItemRequest>;
+export type NewDoneItemRequest = z.infer<typeof newDoneItemRequest>;
 
 // MUST be same as schema in schema.prisma
-export const doneItem = object({
-	uid: string().required(),
-	created_at: date().required(),
-	text: string().required(),
-	date: date().required()
+export const doneItem = z.object({
+	uid: z
+		.string({ required_error: 'uid is required' })
+		.min(1, { message: 'uid must be at least 1 character' })
+		.trim(),
+	created_at: z
+		.date({ required_error: 'created_at is required' })
+		.min(new Date(0), { message: 'created_at must be after 1970-01-01' })
+		.max(new Date(), { message: 'created_at must be before now' }),
+	text: z
+		.string({ required_error: 'text is required' })
+		.min(1, { message: 'text must be at least 1 character' })
+		.trim(),
+	date: z
+		.date({ required_error: 'date is required' })
+		.min(new Date(0), { message: 'date must be after 1970-01-01' })
+		.max(new Date(), { message: 'date must be before now' })
 });
 
-export const doneItems = array().of(doneItem).required();
+export const doneItems = z.array(doneItem);
 
-export type DoneItems = InferType<typeof doneItems>;
+export type DoneItems = z.infer<typeof doneItems>;
