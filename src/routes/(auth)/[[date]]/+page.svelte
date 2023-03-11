@@ -13,20 +13,24 @@
 		goto(`${data.date}/`);
 	};
 
-	let dayBefore = () => {
-		let parsed_date = moment(data.date).toDate();
+	const dayBefore = (date: string) => {
+		let parsed_date = moment(date).toDate();
 		parsed_date.setDate(parsed_date.getDate() - 1);
-		let dayBeforeString = toISOString(parsed_date);
-		goto(`${dayBeforeString}/`);
-		console.log('day before');
+		return toISOString(parsed_date);
 	};
 
-	let dayAfter = () => {
-		let parsed_date = moment(data.date).toDate();
+	const dayAfter = (date: string) => {
+		let parsed_date = moment(date).toDate();
 		parsed_date.setDate(parsed_date.getDate() + 1);
-		let dayAfterString = toISOString(parsed_date);
-		goto(`${dayAfterString}/`);
-		console.log('day after');
+		return toISOString(parsed_date);
+	};
+
+	const isTomorowInFuture = (date: string) => {
+		let parsed_date = moment(date).toDate();
+		parsed_date.setDate(parsed_date.getDate() + 1);
+		let today = new Date();
+		today.setHours(0, 0, 0, 0);
+		return parsed_date > today;
 	};
 </script>
 
@@ -34,9 +38,26 @@
 
 <div class="center">
 	<div class="date">
-		<button on:click={dayBefore}>&lt</button>
-		<input class="date-picker" type="date" bind:value={data.date} on:change={dateChanged} />
-		<button on:click={dayAfter}>&gt</button>
+		<a
+			class="btn text-4xl"
+			data-sveltekit-preload-data="hover"
+			data-sveltekit-preload-code="eager"
+			href={dayBefore(data.date)}>&lt</a
+		>
+		<input
+			class="date"
+			type="date"
+			min="1970-01-01T00:00"
+			max={toISOString(new Date())}
+			bind:value={data.date}
+			on:change={dateChanged}
+		/>
+		{#if !isTomorowInFuture(data.date)}<a
+				class="btn text-4xl"
+				data-sveltekit-preload-data="hover"
+				data-sveltekit-preload-code="eager"
+				href={dayAfter(data.date)}>&gt</a
+			>{/if}
 	</div>
 
 	<form
@@ -64,41 +85,39 @@
 		</div>
 	{/if}
 
-	{#await data.async.done_items}
-	{:then done_items} 
-	<div class="lists">
-		<ul class="list">
-			{#each done_items as item}
-				<li class="list-item">
-					<div>
-						<form class="line" method="POST" action="?/delete">
-							<span class="text">{item.text}</span>
-							<input type="hidden" name="uid" value={item.id} />
-							<!-- <button aria-label="Mark as complete">x</button> -->
-							<button class="btn btn-circle btn-outline">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									class="h-4 w-4"
-									color="red"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-									><path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M6 18L18 6M6 6l12 12"
-									/></svg
-								>
-							</button>
-						</form>
-					</div>
-				</li>
-			{/each}
-		</ul>
-	</div>
+	{#await data.async.done_items then done_items}
+		<div class="lists">
+			<ul class="list">
+				{#each done_items as item}
+					<li class="list-item">
+						<div>
+							<form class="line" method="POST" action="?/delete">
+								<span class="text">{item.text}</span>
+								<input type="hidden" name="uid" value={item.id} />
+								<!-- <button aria-label="Mark as complete">x</button> -->
+								<button class="btn btn-circle btn-outline">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="h-4 w-4"
+										color="red"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										><path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M6 18L18 6M6 6l12 12"
+										/></svg
+									>
+								</button>
+							</form>
+						</div>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/await}
-	
 </div>
 
 <style>
