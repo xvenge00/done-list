@@ -26,18 +26,18 @@ function validateDate(dateParam: string) {
 }
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	let session = await locals.getSession();
+	const session = await locals.getSession();
 	if (!session || !session.user || !session.user.email) {
 		throw redirect(302, '/welcome');
 	}
 
-	let date = getDateFromParam(params.date);
+	const date = getDateFromParam(params.date);
 	logger.info('date', date);
 	if (!validateDate(date)) {
 		throw error(404, { message: 'Date not found' });
 	}
 
-	let email = emailFromSession(await locals.getSession());
+	const email = emailFromSession(await locals.getSession());
 	if (!email) {
 		logger.error('Email not present');
 		throw error(500, { message: 'Internal error' });
@@ -53,25 +53,25 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 export const actions: Actions = {
 	create: async ({ request, params, locals }) => {
-		let session = await locals.getSession();
+		const session = await locals.getSession();
 		if (!session || !session.user || !session.user.email) {
 			return fail(401, { user: 'Unauthorized' });
 		}
 
-		let date = getDateFromParam(params.date);
+		const date = getDateFromParam(params.date);
 		logger.info('date', date);
 		validateDate(date);
 
 		const form_data = Object.fromEntries(await request.formData());
 		logger.info('creating done item: ', JSON.stringify(form_data));
-		let newDoneItemResult = await newDoneItemRequest.safeParseAsync(form_data);
+		const newDoneItemResult = await newDoneItemRequest.safeParseAsync(form_data);
 		if (!newDoneItemResult.success) {
 			return {
 				errors: newDoneItemResult.error.flatten().fieldErrors
 			};
 		}
 
-		let email = emailFromSession(await locals.getSession());
+		const email = emailFromSession(await locals.getSession());
 		if (!email) {
 			logger.error('Email not present');
 			throw new Error('Email not present');
@@ -80,21 +80,21 @@ export const actions: Actions = {
 		logger.info('created new item');
 	},
 	delete: async ({ request, locals }) => {
-		let session = await locals.getSession();
+		const session = await locals.getSession();
 		if (!session || !session.user || !session.user.email) {
 			return fail(401, { user: 'Unauthorized' });
 		}
 
 		const data = Object.fromEntries(await request.formData());
 		logger.info('deleting done item: ', JSON.stringify(data));
-		let itemToDeleteParsed = await deleteItemRequest.safeParseAsync(data);
+		const itemToDeleteParsed = await deleteItemRequest.safeParseAsync(data);
 		if (!itemToDeleteParsed.success) {
 			return {
 				errors: itemToDeleteParsed.error.flatten().fieldErrors
 			};
 		}
 
-		let email = emailFromSession(await locals.getSession());
+		const email = emailFromSession(await locals.getSession());
 		if (!email) {
 			logger.error('Email not present');
 			throw new Error('Email not present');
