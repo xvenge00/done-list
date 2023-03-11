@@ -1,12 +1,14 @@
 <script lang="ts">
 	export let data: PageData;
+	export let form;
+
 	import { goto } from '$app/navigation';
 	import moment from 'moment';
 	import { toISOString } from '$lib/date';
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 
-	let error = '';
+	$: error = form && form.errors && "text" in form.errors ? form.errors.text : '';
 
 	let dateChanged = () => {
 		console.log(`date changed: ${data.date}`);
@@ -74,9 +76,7 @@
 			error = '';
 		}}
 	>
-		<!-- <input name="text" placeholder="Got out of bed?" class="input input-lg input-bordered" autocomplete="off" id="main-input" /> -->
 		<input name="text" placeholder="Got out of bed?" class="text-input" autocomplete="off" />
-		<!-- <input class="btn btn-lg btn-active btn-primary" type="submit" value="I've done this"/> -->
 		<input class="done-button" type="submit" value="Done!" />
 	</form>
 	{#if error}
