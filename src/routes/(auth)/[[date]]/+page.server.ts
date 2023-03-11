@@ -55,7 +55,7 @@ export const actions: Actions = {
 	create: async ({ request, params, locals }) => {
 		let session = await locals.getSession();
 		if (!session || !session.user || !session.user.email) {
-			throw fail(401, { user: 'Unauthorized' });
+			return fail(401, { user: 'Unauthorized' });
 		}
 
 		let date = getDateFromParam(params.date);
@@ -66,12 +66,15 @@ export const actions: Actions = {
 		logger.info('creating done item: ', JSON.stringify(form_data));
 		let newDoneItemResult = await newDoneItemRequest.safeParseAsync(form_data);
 		if (!newDoneItemResult.success) {
-			throw error(400, { message: 'Invalid request' });
+			return {
+				errors: newDoneItemResult.error.flatten().fieldErrors,
+			};
 		}
 
 		let email = emailFromSession(await locals.getSession());
 		if (!email) {
-			throw error(500, { message: 'Email not present' });
+			logger.error('Email not present');
+			throw new Error('Email not present');
 		}
 		await createPostAt(email, newDoneItemResult.data.text, date);
 		logger.info('created new item');
@@ -79,19 +82,22 @@ export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		let session = await locals.getSession();
 		if (!session || !session.user || !session.user.email) {
-			throw fail(401, { user: 'Unauthorized' });
+			return fail(401, { user: 'Unauthorized' });
 		}
 
 		const data = Object.fromEntries(await request.formData());
 		logger.info('deleting done item: ', JSON.stringify(data));
 		let itemToDeleteParsed = await deleteItemRequest.safeParseAsync(data);
 		if (!itemToDeleteParsed.success) {
-			throw error(400, { message: 'Invalid request' });
+			return {
+				errors: itemToDeleteParsed.error.flatten().fieldErrors,
+			};
 		}
 
 		let email = emailFromSession(await locals.getSession());
 		if (!email) {
-			throw error(500, { message: 'Email not present' });
+			logger.error('Email not present');
+			throw new Error('Email not present');
 		}
 
 		await deletePost(email, itemToDeleteParsed.data.uid);

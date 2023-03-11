@@ -7,7 +7,10 @@ export const newDoneItemRequest = z.object({
 });
 
 export const deleteItemRequest = z.object({
-	uid: z.number({ required_error: 'uid is required' })
+	uid: z.preprocess(
+		(value) => parseInt(value as string),
+		z.number({ required_error: 'uid is required' })
+	)
 });
 
 export type NewDoneItemRequest = z.infer<typeof newDoneItemRequest>;
