@@ -13,7 +13,7 @@
 		goto(`${data.date}/`);
 	};
 
-	let dayBefore = () => {
+	const dayBefore = () => {
 		let parsed_date = moment(data.date).toDate();
 		parsed_date.setDate(parsed_date.getDate() - 1);
 		let dayBeforeString = toISOString(parsed_date);
@@ -21,12 +21,20 @@
 		console.log('day before');
 	};
 
-	let dayAfter = () => {
+	const dayAfter = () => {
 		let parsed_date = moment(data.date).toDate();
 		parsed_date.setDate(parsed_date.getDate() + 1);
 		let dayAfterString = toISOString(parsed_date);
 		goto(`${dayAfterString}/`);
 		console.log('day after');
+	};
+
+	const isTomorowInFuture = (date: string) => {
+		let parsed_date = moment(date).toDate();
+		parsed_date.setDate(parsed_date.getDate() + 1);
+		let today = new Date();
+		today.setHours(0, 0, 0, 0);
+		return parsed_date > today;
 	};
 </script>
 
@@ -36,7 +44,7 @@
 	<div class="date">
 		<button on:click={dayBefore}>&lt</button>
 		<input class="date-picker" type="date" bind:value={data.date} on:change={dateChanged} />
-		<button on:click={dayAfter}>&gt</button>
+		{#if !isTomorowInFuture(data.date)}<button on:click={dayAfter}>&gt</button>{/if}
 	</div>
 
 	<form
