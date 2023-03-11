@@ -102,7 +102,7 @@
 				{#each done_items as item}
 					<li class="list-item">
 						<div>
-							<form class="line" method="POST" action="?/delete">
+							<form class="line" method="POST" action="?/delete" use:enhance>
 								<span class="text">{item.text}</span>
 								<input type="hidden" name="uid" value={item.id} />
 								<!-- <button aria-label="Mark as complete">x</button> -->
