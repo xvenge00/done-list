@@ -9,7 +9,7 @@
 	import { enhance } from '$app/forms';
 
 	$: error = form && form.errors && 'text' in form.errors ? form.errors.text : '';
-	let posting = false;
+	let submitting_request = '';
 
 	let dateChanged = () => {
 		console.log(`date changed: ${data.date}`);
@@ -74,11 +74,11 @@
 				return;
 			}
 
-			posting = true;
+			submitting_request = 'posting...';
 			error = '';
 
 			return ({ update }) => {
-				posting = false;
+				submitting_request = '';
 				update();
 			};
 		}}
@@ -92,8 +92,10 @@
 		</div>
 	{/if}
 
-	{#if posting}
-		posting...
+	{#if submitting_request}
+		<div class="submitting">
+			<span>{submitting_request}</span>
+		</div>
 	{/if}
 
 	{#await data.async.done_items then done_items}
@@ -102,7 +104,18 @@
 				{#each done_items as item}
 					<li class="list-item">
 						<div>
-							<form class="line" method="POST" action="?/delete" use:enhance>
+							<form
+								class="line"
+								method="POST"
+								action="?/delete"
+								use:enhance={() => {
+									submitting_request = 'deleting...';
+									return ({ update }) => {
+										submitting_request = '';
+										update();
+									};
+								}}
+							>
 								<span class="text">{item.text}</span>
 								<input type="hidden" name="uid" value={item.id} />
 								<!-- <button aria-label="Mark as complete">x</button> -->
@@ -195,6 +208,11 @@
 
 	span.text {
 		margin: auto auto auto 0;
+	}
+
+	div.submitting {
+		margin: auto;
+		text-align: center;
 	}
 
 	div.error {
