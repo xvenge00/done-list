@@ -67,7 +67,7 @@ export const actions: Actions = {
 		let newDoneItemResult = await newDoneItemRequest.safeParseAsync(form_data);
 		if (!newDoneItemResult.success) {
 			return {
-				errors: newDoneItemResult.error.flatten().fieldErrors,
+				errors: newDoneItemResult.error.flatten().fieldErrors
 			};
 		}
 
@@ -90,7 +90,7 @@ export const actions: Actions = {
 		let itemToDeleteParsed = await deleteItemRequest.safeParseAsync(data);
 		if (!itemToDeleteParsed.success) {
 			return {
-				errors: itemToDeleteParsed.error.flatten().fieldErrors,
+				errors: itemToDeleteParsed.error.flatten().fieldErrors
 			};
 		}
 
