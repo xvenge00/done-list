@@ -31,4 +31,6 @@ jobs:
           PUBLIC_SENTRY_DSN: ${{ secrets.PUBLIC_SENTRY_DSN }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           AUTH_TRUST_HOST: true
-        run: npm run check
+        run: |
+          npm run lint
+          npm run check
