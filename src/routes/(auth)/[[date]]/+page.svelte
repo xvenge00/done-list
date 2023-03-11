@@ -8,7 +8,8 @@
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 
-	$: error = form && form.errors && "text" in form.errors ? form.errors.text : '';
+	$: error = form && form.errors && 'text' in form.errors ? form.errors.text : '';
+	let posting = false;
 
 	let dateChanged = () => {
 		console.log(`date changed: ${data.date}`);
@@ -73,7 +74,13 @@
 				return;
 			}
 
+			posting = true;
 			error = '';
+
+			return ({ update }) => {
+				posting = false;
+				update();
+			};
 		}}
 	>
 		<input name="text" placeholder="Got out of bed?" class="text-input" autocomplete="off" />
@@ -83,6 +90,10 @@
 		<div class="error">
 			<span class="error">{error}</span>
 		</div>
+	{/if}
+
+	{#if posting}
+		posting...
 	{/if}
 
 	{#await data.async.done_items then done_items}
