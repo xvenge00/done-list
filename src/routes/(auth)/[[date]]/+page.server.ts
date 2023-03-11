@@ -17,7 +17,11 @@ function getDateFromParam(dateParam: string | undefined): string {
 }
 
 function validateDate(dateParam: string) {
-	const { success } = z.coerce.date().safeParse(dateParam);
+	const { success } = z.coerce
+		.date()
+		.min(new Date(0), { message: 'created_at must be after 1970-01-01' })
+		.max(new Date(), { message: 'created_at must be before now' })
+		.safeParse(dateParam);
 	return success;
 }
 

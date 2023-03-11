@@ -13,20 +13,16 @@
 		goto(`${data.date}/`);
 	};
 
-	const dayBefore = () => {
-		let parsed_date = moment(data.date).toDate();
+	const dayBefore = (date: string) => {
+		let parsed_date = moment(date).toDate();
 		parsed_date.setDate(parsed_date.getDate() - 1);
-		let dayBeforeString = toISOString(parsed_date);
-		goto(`${dayBeforeString}/`);
-		console.log('day before');
+		return toISOString(parsed_date);
 	};
 
-	const dayAfter = () => {
-		let parsed_date = moment(data.date).toDate();
+	const dayAfter = (date: string) => {
+		let parsed_date = moment(date).toDate();
 		parsed_date.setDate(parsed_date.getDate() + 1);
-		let dayAfterString = toISOString(parsed_date);
-		goto(`${dayAfterString}/`);
-		console.log('day after');
+		return toISOString(parsed_date);
 	};
 
 	const isTomorowInFuture = (date: string) => {
@@ -42,9 +38,25 @@
 
 <div class="center">
 	<div class="date">
-		<button class="text-4xl" on:click={dayBefore}>&lt</button>
-		<input class="date-picker" type="date" bind:value={data.date} on:change={dateChanged} />
-		{#if !isTomorowInFuture(data.date)}<button class="text-4xl" on:click={dayAfter}>&gt</button
+		<a
+			class="btn text-4xl"
+			data-sveltekit-preload-data="hover"
+			data-sveltekit-preload-code="eager"
+			href={dayBefore(data.date)}>&lt</a
+		>
+		<input
+			class="date"
+			type="date"
+			min="1970-01-01T00:00"
+			max={toISOString(new Date())}
+			bind:value={data.date}
+			on:change={dateChanged}
+		/>
+		{#if !isTomorowInFuture(data.date)}<a
+				class="btn text-4xl"
+				data-sveltekit-preload-data="hover"
+				data-sveltekit-preload-code="eager"
+				href={dayAfter(data.date)}>&gt</a
 			>{/if}
 	</div>
 
