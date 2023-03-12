@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/public';
+import { dev } from "$app/environment";
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function log(level: string, args: any[]) {
@@ -9,7 +9,7 @@ function log(level: string, args: any[]) {
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function debug(...args: any) {
-	if (env.PUBLIC_IS_DEV ?? false) {
+	if (dev) {
 		log('debug', args);
 	}
 }
