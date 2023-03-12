@@ -1,4 +1,5 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
+import { dev } from "$app/environment"
 import GitHub from '@auth/core/providers/github';
 import Google from '@auth/core/providers/google';
 import {
@@ -32,6 +33,13 @@ SentryNode.init({
 });
 
 export const handleError: HandleServerError = ({ error, event }) => {
+	if (dev) {
+		return {
+			message: 'Unexpected error',
+			errorId: 'err1'
+		}
+	}
+
 	const errorId = crypto.randomUUID();
 	SentryNode.captureException(error, {
 		contexts: { sveltekit: { event, errorId } }

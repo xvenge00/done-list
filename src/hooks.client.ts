@@ -1,6 +1,7 @@
 import * as SentrySvelte from '@sentry/svelte';
 import type { HandleClientError } from '@sveltejs/kit';
 import { PUBLIC_SENTRY_DSN } from '$env/static/public';
+import { dev } from "$app/environment"
 
 SentrySvelte.init({
 	dsn: PUBLIC_SENTRY_DSN,
@@ -10,6 +11,14 @@ SentrySvelte.init({
 });
 
 export const handleError: HandleClientError = ({ error, event }) => {
+	if (dev) {
+		return {
+			message: 'Unexpected error',
+			errorId: 'err1'
+		}
+	}
+	
+
 	const errorId = crypto.randomUUID();
 	SentrySvelte.captureException(error, {
 		contexts: { sveltekit: { event, errorId } }
