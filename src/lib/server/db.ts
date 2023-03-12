@@ -9,6 +9,9 @@ export async function getDoneItemsForDate(email: string, date: string): Promise<
 			user: {
 				email: email
 			}
+		},
+		orderBy: {
+			created_at: 'desc'
 		}
 	});
 }

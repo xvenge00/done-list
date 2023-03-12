@@ -1,5 +1,5 @@
 import { type Actions, error, redirect, fail } from '@sveltejs/kit';
-import { deleteItemRequest, newDoneItemRequest } from '../api/done/api';
+import { deleteItemRequest, newDoneItemRequest } from '$lib/db';
 import * as logger from '$lib/logger';
 import { toISOString } from '$lib/date';
 import { z } from 'zod';
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 
 	const date = getDateFromParam(params.date);
-	logger.info('date', date);
+	logger.debug('date', date);
 	if (!validateDate(date)) {
 		throw error(404, { message: 'Date not found' });
 	}
@@ -59,7 +59,7 @@ export const actions: Actions = {
 		}
 
 		const date = getDateFromParam(params.date);
-		logger.info('date', date);
+		logger.debug('date', date);
 		validateDate(date);
 
 		const form_data = Object.fromEntries(await request.formData());
@@ -101,5 +101,6 @@ export const actions: Actions = {
 		}
 
 		await deletePost(email, itemToDeleteParsed.data.uid);
+		logger.info('deleted done item');
 	}
 };
