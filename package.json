@@ -36,7 +36,7 @@
 	"type": "module",
 	"dependencies": {
 		"@auth/core": "^0.5.0",
-		"@auth/sveltekit": "^0.2.2",
+		"@auth/sveltekit": "^0.3.0",
 		"@prisma/client": "4.10.1",
 		"@sentry/node": "^7.41.0",
 		"@sentry/svelte": "^7.41.0",
