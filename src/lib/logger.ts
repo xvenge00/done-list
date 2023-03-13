@@ -1,4 +1,4 @@
-import { dev } from "$app/environment";
+import { dev } from '$app/environment';
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function log(level: string, args: any[]) {
