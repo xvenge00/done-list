@@ -1,5 +1,5 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
-import { dev } from "$app/environment"
+import { dev } from '$app/environment';
 import GitHub from '@auth/core/providers/github';
 import Google from '@auth/core/providers/google';
 import {
@@ -13,14 +13,13 @@ import type { HandleServerError } from '@sveltejs/kit';
 import crypto from 'crypto';
 import * as SentryNode from '@sentry/node';
 import { PUBLIC_SENTRY_DSN } from '$env/static/public';
+import type { Handle } from '@sveltejs/kit';
+import type { Provider } from '@auth/core/providers';
 
-export const handle = SvelteKitAuth({
+export const handle: Handle = SvelteKitAuth({
 	providers: [
-		// T
-		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
-		GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }),
-		//@ts-expect-error issue https://github.com/nextauthjs/next-auth/issues/6174
-		Google({ clientId: AUTH_GOOGLE_CLIENT_ID, clientSecret: AUTH_GOOGLE_CLIENT_SECRET })
+		GitHub({ clientId: AUTH_GITHUB_ID, clientSecret: AUTH_GITHUB_SECRET }) as Provider,
+		Google({ clientId: AUTH_GOOGLE_CLIENT_ID, clientSecret: AUTH_GOOGLE_CLIENT_SECRET }) as Provider
 	],
 	secret: AUTH_SECRET
 });
@@ -37,7 +36,7 @@ export const handleError: HandleServerError = ({ error, event }) => {
 		return {
 			message: 'Unexpected error',
 			errorId: 'err1'
-		}
+		};
 	}
 
 	const errorId = crypto.randomUUID();
